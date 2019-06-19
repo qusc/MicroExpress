@@ -8,4 +8,5 @@ xcuserdata
 *.build
 *.xcodeproj
 Package.resolved
+.swiftpm
 

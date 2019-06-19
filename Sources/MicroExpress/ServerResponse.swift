@@ -240,17 +240,17 @@ public extension ServerResponse {
     }
   }
   
-  private func path(to resource: String, ofType: String,
+  private func path(to resource: String, ofType type: String,
                     in pathContext: String) -> String?
   {
     #if os(iOS) && !arch(x86_64) // iOS support, FIXME: blocking ...
-      return Bundle.main.path(forResource: resource, ofType: "mustache")
+      return Bundle.main.path(forResource: resource, ofType: type)
     #else
       var url = URL(fileURLWithPath: pathContext)
       url.deleteLastPathComponent()
       url.appendPathComponent("templates", isDirectory: true)
       url.appendPathComponent(resource)
-      url.appendPathExtension("mustache")
+      url.appendPathExtension(type)
       return url.path
     #endif
   }
