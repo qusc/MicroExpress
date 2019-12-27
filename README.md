@@ -10,10 +10,10 @@
 ![Travis](https://travis-ci.org/NozeIO/MicroExpress.svg?branch=master)
 
 A micro server framework on top of
-[Swift NIO](https://github.com/apple/swift-nio).
+[SwiftNIO](https://github.com/apple/swift-nio).
 
 It adds an Express like API on top of the 
-low level [Swift NIO](https://github.com/apple/swift-nio/tree/1.1.0) API.
+low level [SwiftNIO](https://github.com/apple/swift-nio/tree/2.12.0) API.
 ```swift
 import MicroExpress
 
@@ -41,19 +41,21 @@ offical Swift
 [HTTP API](https://github.com/swift-server/http).
 
 - Blog series:
-  - Part 1 [Using the Swift Server API 0.1.0](http://www.alwaysrightinstitute.com/http-010/)
-  - Part 2 [µExpress](http://www.alwaysrightinstitute.com/microexpress/)
-  - Part 3 [µExpress/NIO](http://www.alwaysrightinstitute.com/microexpress-nio)
-  - Part 4 [µExpress/NIO Templates](http://www.alwaysrightinstitute.com/microexpress-nio-templates)
+  - Part 3 [µExpress](https://www.alwaysrightinstitute.com/microexpress-nio2/)
+  - Part 4 [µExpress/NIO Templates](https://www.alwaysrightinstitute.com/microexpress-nio-templates)
+  - Old:
+    - Part 1 [Using the Swift Server API 0.1.0](https://www.alwaysrightinstitute.com/http-010/)
+    - Part 2 [µExpress](https://www.alwaysrightinstitute.com/microexpress/)
+    - Part 3 [µExpress/NIO](https://www.alwaysrightinstitute.com/microexpress-nio)
 
-Please checkout [Part 3](http://www.alwaysrightinstitute.com/microexpress-nio)
+Please checkout [Part 3](https://www.alwaysrightinstitute.com/microexpress-nio2)
 of our blog series to learn what this is about.
 This is a tiny framework, for a more full featured, *synchronous*
 Express-like API in Swift, have a look at 
 [ExExpress](https://github.com/modswift/ExExpress)
 (as used in [ApacheExpress](http://apacheexpress.io)).
 [Noze.io](http://noze.io) comes w/ an *asynchronous* variant (but is using
-Dispatch, not Swift NIO - stay tuned).
+Dispatch, not SwiftNIO - stay tuned).
 
 
 ## Using the Package
@@ -68,14 +70,14 @@ $ swift package init --type executable
 
 Update `Package.swift` to include the dependency:
 ```swift
-// swift-tools-version:4.0
+// swift-tools-version:5.0
 import PackageDescription
 
 let package = Package(
   name: "MicroHelloWorld",
   dependencies: [
     .package(url: "https://github.com/NozeIO/MicroExpress.git", 
-             from: "0.4.4")
+             from: "0.5.3")
   ],
   targets: [
     .target(name: "MicroHelloWorld",
@@ -107,55 +109,22 @@ Done. Access via: [http://localhost:1337/](http://localhost:1337/)
 
 ## Building the Package
 
-### Xcode
+### Xcode 11
 
-Choose the easy way using the 
-[swift-xcode](https://swiftxcode.github.io)
-[Swift NIO image](https://github.com/SwiftXcode/SwiftNIO_XcodeImage),
-or take the hard way and use `swift package generate-xcodeproj`.
+Using Xcode 11 one can just open the `Package.swift` file.
 
-#### swift-xcode
-
-```shell
-brew install swiftxcode/swiftxcode/swift-xcode-nio
-swift xcode link-templates # <-- important!
-```
-
-1. Create new project (Command-Shift-N or File/New/Project ...)
-2. choose macOS / Server / Swift NIO template
-3. check desired options
-4. build and run, and then have fun!
-
-<img src="http://zeezide.com/img/microexpress-nio/01-new-project.jpg" align="center" />
-
-<img src="http://zeezide.com/img/microexpress-nio/02-new-project.jpg" align="center" />
-
-#### swift package generate-xcodeproj
-
-Important: This creates a few schemes in the Xcode project. Make sure to
-           select the right one when building & running.
-
-```shell
-$ swift package generate-xcodeproj
-Fetching ...
-Cloning ...
-Resolving ...
-generated: ./MicroExpress.xcodeproj
-
-$ open MicroExpress.xcodeproj
-```
-
-### macOS /Linux Command Line
+### macOS / Linux Command Line
 
 ```shell
 $ swift build
-Fetching ...
-Cloning ...
-Resolving ...
-Compile ...
-Compile Swift Module ...
-Compile Swift Module 'MicroExpress' (9 sources)
-Linking ./.build/x86_64-apple-macosx10.10/debug/MicroExpress
+Fetching https://github.com/apple/swift-nio.git
+Fetching https://github.com/AlwaysRightInstitute/mustache.git
+Completed resolution in 5.97s
+Cloning https://github.com/AlwaysRightInstitute/mustache.git
+Resolving https://github.com/AlwaysRightInstitute/mustache.git at 0.5.9
+Cloning https://github.com/apple/swift-nio.git
+Resolving https://github.com/apple/swift-nio.git at 2.12.0
+[100/100] Merging module MicroExpress
 ```
 
 ### Linux via macOS Docker
@@ -164,34 +133,25 @@ Linking ./.build/x86_64-apple-macosx10.10/debug/MicroExpress
 $ docker run --rm \
   -v "${PWD}:/src" \
   -v "${PWD}/.docker.build:/src/.build" \
-  swift:4.0.3 \
+  swift:5.1.3 \
   bash -c 'cd /src && swift build'
-Unable to find image 'swift:4.0.3' locally
-4.0.3: Pulling from library/swift
-8f7c85c2269a: Pull complete 
+Unable to find image 'swift:5.1.3' locally
+5.1.3: Pulling from library/swift
+2746a4a261c9: Pull complete 
 ...
-9783e1c76d2b: Pull complete 
-Digest: sha256:6978675b95f749b54eab57163c663d45b25c431c6d50cb5b2983062a55cea3c6
-Status: Downloaded newer image for swift:4.0.3
-Compile ...
-Compile Swift Module ...
-Compile Swift Module 'MicroExpress' (9 sources)
-Linking ./.build/x86_64-unknown-linux/debug/MicroExpress
-Fetching ...
-Cloning ...
-Resolving ...
-
-$ file .docker.build/x86_64-unknown-linux/debug/MicroExpress
-.docker.build/x86_64-unknown-linux/debug/MicroExpress: 
-  ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked ...
+b5d1069a5aa4: Pull complete 
+Digest: sha256:72d7e583452031ae88251263649fc56ea79f98f4147474080426fb5c1ff904aa
+Status: Downloaded newer image for swift:5.1.3
+Fetching https://github.com/apple/swift-nio.git
+...
+[99/99] Compiling MicroExpress Express.swift
+[100/100] Merging module MicroExpress
 ```
 
 
 ### Links
 
-- [Swift NIO](https://github.com/apple/swift-nio)
-- [Noze.io](http://noze.io)
-- [ExExpress](https://github.com/modswift/ExExpress)
+- [SwiftNIO](https://github.com/apple/swift-nio)
 - JavaScript Originals
   - [Connect](https://github.com/senchalabs/connect)
   - [Express.js](http://expressjs.com/en/starter/hello-world.html)
@@ -218,5 +178,7 @@ There is a `#microexpress` channel on the
 
 
 ### Want a Video Tutorial?
+
+_(this one is still using SwiftXcode instead of the Xcode 11 SPM support)_
 
 <img src="http://zeezide.com/img/swift-nio-cows.gif" />
