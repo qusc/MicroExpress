@@ -48,7 +48,7 @@ open class Express : Router {
       let serverChannel =
         try bootstrap.bind(unixDomainSocketPath: unixSocket)
           .wait()
-      print("Server running on:", socket)
+      print("Server running on:", unixSocket)
       
       try serverChannel.closeFuture.wait() // runs forever
     }
