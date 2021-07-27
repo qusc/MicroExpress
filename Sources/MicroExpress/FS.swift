@@ -28,14 +28,10 @@ public enum fs {
 
   public static
   func readFile(_ path    : String,
-                eventLoop : EventLoop? = nil,
+                eventLoop : EventLoop,
                 maxSize   : Int = 1024 * 1024,
                  _ cb: @escaping ( Error?, ByteBuffer? ) -> ())
   {
-    let eventLoop = eventLoop
-                 ?? MultiThreadedEventLoopGroup.currentEventLoop
-                 ?? loopGroup.next()
-    
     func emit(error: Error? = nil, result: ByteBuffer? = nil) {
       if eventLoop.inEventLoop { cb(error, result) }
       else { eventLoop.execute { cb(error, result) } }

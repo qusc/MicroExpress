@@ -4,13 +4,18 @@ import Foundation
 import NIO
 import NIOHTTP1
 
-let loopGroup =
-  MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
-
 open class Express : Router {
+  let loopGroup: EventLoopGroup
+  var serverChannel: Channel?
   
-  override public init() {}
-
+  override public init() {
+    loopGroup = MultiThreadedEventLoopGroup(numberOfThreads: System.coreCount)
+  }
+  
+  public init(eventLoopGroup: EventLoopGroup) {
+    loopGroup = eventLoopGroup
+  }
+  
   private func createServerBootstrap(_ backlog : Int) -> ServerBootstrap {
     let reuseAddrOpt = ChannelOptions.socket(SocketOptionLevel(SOL_SOCKET),
                                              SO_REUSEADDR)
@@ -43,14 +48,14 @@ open class Express : Router {
                    backlog    : Int    = 256)
   {
     let bootstrap = self.createServerBootstrap(backlog)
-
+    
     do {
-      let serverChannel =
+      serverChannel =
         try bootstrap.bind(unixDomainSocketPath: unixSocket)
-          .wait()
-      print("Server running on:", unixSocket)
+        .wait()
+      //      print("Server running on:", unixSocket)
       
-      try serverChannel.closeFuture.wait() // runs forever
+      //      try serverChannel.closeFuture.wait() // runs forever
     }
     catch {
       fatalError("failed to start server: \(error)")
@@ -64,12 +69,12 @@ open class Express : Router {
     let bootstrap = self.createServerBootstrap(backlog)
     
     do {
-      let serverChannel =
+      serverChannel =
         try bootstrap.bind(host: host, port: port)
-          .wait()
-      print("Server running on:", serverChannel.localAddress!)
+        .wait()
+      //      print("Server running on:", serverChannel.localAddress!)
       
-      try serverChannel.closeFuture.wait() // runs forever
+      //      try serverChannel.closeFuture.wait() // runs forever
     }
     catch {
       fatalError("failed to start server: \(error)")

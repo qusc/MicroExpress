@@ -211,7 +211,7 @@ public extension ServerResponse {
             ?? "/dummyDoesNotExist"
     
     // Read the template file
-    fs.readFile(path) { err, data in
+    fs.readFile(path, eventLoop: channel.eventLoop) { err, data in
       guard var data = data else {
         res.status = .internalServerError
         return res.send("Error: \(err as Optional)")
